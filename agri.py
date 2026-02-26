@@ -1,89 +1,63 @@
-class Crop:
-    def __init__(self, name, area, water_required, fertilizer_required, expected_yield):
-        self.name = name
-        self.area = area  # in acres
-        self.water_required = water_required  # liters per acre
-        self.fertilizer_required = fertilizer_required  # kg per acre
-        self.expected_yield = expected_yield  # quintals per acre
+# Student Marks Report Generator (No user input)
 
-    def total_water(self):
-        return self.area * self.water_required
+students = {
+    "Arjun": [78, 82, 88],
+    "Rahul": [90, 91, 89],
+    "Kiran": [65, 70, 72],
+    "Vikram": [50, 45, 60],
+    "Manoj": [92, 95, 94],
+    "Sanjay": [55, 58, 52]
+}
 
-    def total_fertilizer(self):
-        return self.area * self.fertilizer_required
+def calculate_average(marks):
+    return sum(marks) / len(marks)
 
-    def total_yield(self):
-        return self.area * self.expected_yield
+def calculate_grade(avg):
+    if avg >= 90:
+        return "A"
+    elif avg >= 75:
+        return "B"
+    elif avg >= 60:
+        return "C"
+    elif avg >= 50:
+        return "D"
+    else:
+        return "F"
 
+report = []
 
-class Farm:
-    def __init__(self):
-        self.crops = []
+for name, marks in students.items():
+    avg = calculate_average(marks)
+    grade = calculate_grade(avg)
+    report.append((name, marks, avg, grade))
 
-    def add_crop(self):
-        name = input("Enter crop name: ")
-        area = float(input("Enter area (in acres): "))
-        water = float(input("Enter water required per acre (liters): "))
-        fertilizer = float(input("Enter fertilizer required per acre (kg): "))
-        yield_per_acre = float(input("Enter expected yield per acre (quintals): "))
+# sort by average descending
+report.sort(key=lambda x: x[2], reverse=True)
 
-        crop = Crop(name, area, water, fertilizer, yield_per_acre)
-        self.crops.append(crop)
-        print("Crop added successfully!\n")
+print("STUDENT REPORT")
+print("-" * 40)
 
-    def view_crops(self):
-        if not self.crops:
-            print("No crops added yet.\n")
-            return
+for r in report:
+    print(f"Name   : {r[0]}")
+    print(f"Marks  : {r[1]}")
+    print(f"Average: {r[2]:.2f}")
+    print(f"Grade  : {r[3]}")
+    print("-" * 40)
 
-        for crop in self.crops:
-            print(f"\nCrop: {crop.name}")
-            print(f"Area: {crop.area} acres")
-            print(f"Total Water Needed: {crop.total_water()} liters")
-            print(f"Total Fertilizer Needed: {crop.total_fertilizer()} kg")
-            print(f"Expected Total Yield: {crop.total_yield()} quintals")
+# class statistics
+averages = [r[2] for r in report]
+highest = max(averages)
+lowest = min(averages)
+class_avg = sum(averages) / len(averages)
 
-    def calculate_profit(self):
-        if not self.crops:
-            print("No crops available.\n")
-            return
+print("\nCLASS STATISTICS")
+print(f"Highest Average : {highest:.2f}")
+print(f"Lowest Average  : {lowest:.2f}")
+print(f"Class Average   : {class_avg:.2f}")
 
-        total_profit = 0
-        for crop in self.crops:
-            price = float(input(f"Enter market price per quintal for {crop.name}: "))
-            cost = float(input(f"Enter total production cost for {crop.name}: "))
-            revenue = crop.total_yield() * price
-            profit = revenue - cost
-            total_profit += profit
-            print(f"Profit for {crop.name}: ₹{profit}")
+# save report to file
+with open("student_report.txt", "w") as file:
+    for r in report:
+        file.write(f"{r[0]} | Avg: {r[2]:.2f} | Grade: {r[3]}\n")
 
-        print(f"\nTotal Farm Profit: ₹{total_profit}\n")
-
-
-def main():
-    farm = Farm()
-
-    while True:
-        print("\n--- Agriculture Management System ---")
-        print("1. Add Crop")
-        print("2. View Crops")
-        print("3. Calculate Profit")
-        print("4. Exit")
-
-        choice = input("Enter your choice: ")
-
-        if choice == "1":
-            farm.add_crop()
-        elif choice == "2":
-            farm.view_crops()
-        elif choice == "3":
-            farm.calculate_profit()
-        elif choice == "4":
-            print("Exiting system...")
-            break
-        else:
-            print("Invalid choice! Try again.\n")
-
-
-if __name__ == "__main__":
-    main()
+print("\nReport saved to student_report.txt")
